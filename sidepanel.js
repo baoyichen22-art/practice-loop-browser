@@ -1,12 +1,13 @@
 const $ = (selector) => document.querySelector(selector);
 let source = null;
+let sourceLoaded = false;
 let selectedMinutes = 15;
 let editingPlanId = null;
 let currentLanguage = "zh";
 
 const messages = {
   zh: {
-    subtitle: "从学会到做到", sourceTitle: "打开 YouTube 或 X 教程", sourceMeta: "点击下方按钮读取当前页面。",
+    subtitle: "从学会到做到", sourceEyebrow: "当前内容", sourceTitle: "打开 YouTube 或 X 教程", sourceMeta: "点击下方按钮读取当前页面。", settingsTitle: "设置",
     read: "读取当前页面", reread: "重新读取", readDone: "已读取当前页面", unknownTitle: "未识别标题",
     back: "← 返回重新读取内容", setup: "转化为实践", projectLabel: "你想把它用在哪个真实项目？",
     projectPlaceholder: "例如：为我的 AI 工具验证 3 个真实用户需求", principlesLabel: "教程最关键的方法或步骤",
@@ -29,7 +30,7 @@ const messages = {
     blocker: "当前阻碍：", saved: "个人档案已保存，每日提醒已开启。", core: "教程的核心原则"
   },
   en: {
-    subtitle: "Turn learning into action", sourceTitle: "Open a YouTube or X tutorial", sourceMeta: "Select the button below to read this page.",
+    subtitle: "Turn learning into action", sourceEyebrow: "CURRENT CONTENT", sourceTitle: "Open a YouTube or X tutorial", sourceMeta: "Select the button below to read this page.", settingsTitle: "Settings",
     read: "Read current page", reread: "Read again", readDone: "Current page captured", unknownTitle: "Untitled source",
     back: "← Back and read again", setup: "TURN IT INTO PRACTICE", projectLabel: "Which real project will you apply this to?",
     projectPlaceholder: "Example: validate three real user needs for my AI tool", principlesLabel: "The tutorial's essential methods or steps",
@@ -99,6 +100,7 @@ async function readCurrentPage() {
   } catch {
     source = { title: tab.title, url: tab.url, platform: "Web", excerpt: "", transcript: "", needsTranscript: true };
   }
+  sourceLoaded = true;
   $("#sourceTitle").textContent = source.title || t("unknownTitle");
   $("#sourceMeta").textContent = `${source.platform} · ${t("readDone")}`;
   $("#readButton").textContent = t("reread");
@@ -153,6 +155,7 @@ async function editActivePlan() {
   if (!plan) return;
   editingPlanId = plan.id;
   source = { title: plan.title, url: plan.url, platform: plan.platform, transcript: "", excerpt: "", needsTranscript: false };
+  sourceLoaded = true;
   $("#projectInput").value = plan.project || "";
   $("#principlesInput").value = (plan.principles || []).join("\n");
   $("#planSection").hidden = true;
@@ -272,8 +275,16 @@ async function changeLanguage() {
 function applyLanguage() {
   document.documentElement.lang = currentLanguage === "en" ? "en" : "zh-CN";
   $("#brandSubtitle").textContent = t("subtitle");
-  if (!source) { $("#sourceTitle").textContent = t("sourceTitle"); $("#sourceMeta").textContent = t("sourceMeta"); }
-  $("#readButton").textContent = source ? t("reread") : t("read");
+  $("#settingsButton").title = t("settingsTitle");
+  $("#sourceSection .eyebrow").textContent = t("sourceEyebrow");
+  if (!sourceLoaded) {
+    $("#sourceTitle").textContent = t("sourceTitle");
+    $("#sourceMeta").textContent = t("sourceMeta");
+  } else {
+    $("#sourceTitle").textContent = source?.title || t("unknownTitle");
+    $("#sourceMeta").textContent = `${source?.platform || "Web"} · ${t("readDone")}`;
+  }
+  $("#readButton").textContent = sourceLoaded ? t("reread") : t("read");
   $("#fallback summary").textContent = t("noTranscript");
   $("#manualContent").placeholder = t("manualPlaceholder");
   $("#backToSourceButton").textContent = t("back");
@@ -288,6 +299,7 @@ function applyLanguage() {
   $("#evidenceInput").placeholder = t("evidencePlaceholder"); $("#blockerInput").placeholder = t("blockerPlaceholder"); $("#submitButton").textContent = t("submit");
   const settingsLabels = $("#settingsSection").querySelectorAll("label"); $("#settingsSection .eyebrow").textContent = t("settings");
   $("#languageLabel").textContent = t("language"); settingsLabels[1].textContent = t("defaultPractice"); settingsLabels[2].textContent = t("reminder"); settingsLabels[3].textContent = t("level"); settingsLabels[4].textContent = t("goal");
+  $("#languageSelect option[value='zh']").textContent = currentLanguage === "en" ? "Chinese" : "中文";
   $("#settingsSection input[disabled]").value = t("defaultMinutes");
   $("#levelInput").placeholder = t("levelPlaceholder"); $("#goalInput").placeholder = t("goalPlaceholder"); $("#saveSettings").textContent = t("save");
   $("#queueSection .eyebrow").textContent = t("queue"); $("#queueSection h2").textContent = t("oneAtTime"); $("#queueSection p").textContent = t("queueHelp");
