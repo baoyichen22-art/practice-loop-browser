@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Practice Loop</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="mark">↻</span><div><b>Practice Loop</b><small id="brandSubtitle">从学会到做到</small></div></div>
+    <button id="settingsButton" class="icon-button" title="设置">⚙</button>
+  </header>
+
+  <main>
+    <section id="sourceSection" class="card source-card">
+      <div class="eyebrow">当前内容</div>
+      <h1 id="sourceTitle">打开 YouTube 或 X 教程</h1>
+      <p id="sourceMeta" class="muted">点击下方按钮读取当前页面。</p>
+      <button id="readButton" class="primary">读取当前页面</button>
+      <details id="fallback" hidden>
+        <summary>没有读取到字幕？</summary>
+        <textarea id="manualContent" rows="5" placeholder="粘贴字幕、帖子正文或你的笔记"></textarea>
+      </details>
+    </section>
+
+    <section id="setupSection" class="card" hidden>
+      <button id="backToSourceButton" class="text-button">← 返回重新读取内容</button>
+      <div class="eyebrow">转化为实践</div>
+      <label>你想把它用在哪个真实项目？</label>
+      <textarea id="projectInput" rows="3" placeholder="例如：为我的 AI 工具验证 3 个真实用户需求"></textarea>
+      <label>教程最关键的方法或步骤</label>
+      <textarea id="principlesInput" rows="4" placeholder="可以先写你理解的 1–4 条；之后可继续编辑"></textarea>
+      <button id="generateButton" class="primary">生成训练计划</button>
+    </section>
+
+    <section id="planSection" hidden>
+      <div class="progress-row"><span>本周真实成果</span><b id="weeklyProgress">0 / 1</b></div>
+      <div class="card hero-card">
+        <div class="eyebrow">今天 · Day 1</div>
+        <h2 id="practiceTitle">今日练习</h2>
+        <p id="practiceOutcome" class="outcome"></p>
+        <button id="editPlanButton" class="edit-button">← 返回修改前期信息</button>
+        <div class="modes" role="tablist">
+          <button class="mode" data-minutes="5">最低 <b>5m</b></button>
+          <button class="mode active" data-minutes="15">标准 <b>15m</b></button>
+          <button class="mode" data-minutes="30">深入 <b>30m</b></button>
+        </div>
+        <ol id="taskList" class="tasks"></ol>
+        <div class="evidence-callout"><b>提交证据</b><span id="evidenceHint"></span></div>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">提交与验收</div>
+        <label>你的成果或证据</label>
+        <textarea id="evidenceInput" rows="5" placeholder="粘贴成果、链接、数据或描述已上传的文件/截图"></textarea>
+        <label>自评完成度：<b id="selfRatingLabel">80%</b></label>
+        <input id="selfRating" type="range" min="0" max="100" value="80">
+        <label>最困难的地方</label>
+        <input id="blockerInput" placeholder="例如：不知道怎么获得真实反馈">
+        <button id="submitButton" class="primary">提交练习</button>
+      </div>
+
+      <div id="scoreCard" class="card score-card" hidden>
+        <div class="score-ring"><strong id="scoreValue">0</strong><span>/100</span></div>
+        <div><div id="decision" class="decision"></div><p id="feedback" class="muted"></p></div>
+      </div>
+    </section>
+
+    <section id="settingsSection" class="card" hidden>
+      <div class="eyebrow">个人档案与提醒</div>
+      <label id="languageLabel">界面语言</label>
+      <select id="languageSelect">
+        <option value="zh">中文</option>
+        <option value="en">English</option>
+      </select>
+      <label>每天默认练习</label><input value="15 分钟" disabled>
+      <label>提醒时间</label><input id="reminderTime" type="time" value="20:30">
+      <label>当前水平</label><input id="levelInput" placeholder="初学 / 熟悉 / 熟练">
+      <label>主要目标</label><textarea id="goalInput" rows="2" placeholder="你希望在真实工作中达成什么？"></textarea>
+      <button id="saveSettings" class="primary">保存并开启每日提醒</button>
+    </section>
+
+    <section id="queueSection" hidden>
+      <div class="card">
+        <div class="eyebrow">待实践队列</div>
+        <h2>一次只练一个</h2>
+        <p class="muted">主计划完成或放弃后，再从这里选择下一项。</p>
+        <div id="queueList"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><button id="todayNav" class="nav active">今日练习</button><button id="queueNav" class="nav">待实践队列</button></footer>
+  <script src="sidepanel.js"></script>
+</body>
+</html>
