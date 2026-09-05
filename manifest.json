@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Practice Loop",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Turn YouTube and X tutorials into daily real-world practice.",
   "minimum_chrome_version": "116",
   "permissions": ["activeTab", "sidePanel", "storage", "alarms", "notifications"],
