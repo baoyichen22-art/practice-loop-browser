@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Practice Loop",
+  "version": "0.2.0",
+  "description": "Turn YouTube and X tutorials into daily real-world practice.",
+  "minimum_chrome_version": "116",
+  "permissions": ["activeTab", "sidePanel", "storage", "alarms", "notifications"],
+  "host_permissions": ["https://www.youtube.com/*", "https://youtu.be/*", "https://x.com/*", "https://twitter.com/*"],
+  "background": { "service_worker": "background.js" },
+  "action": { "default_title": "Open Practice Loop" },
+  "side_panel": { "default_path": "sidepanel.html" },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*", "https://youtu.be/*", "https://x.com/*", "https://twitter.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
